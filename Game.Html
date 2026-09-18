@@ -3,37 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shipping Manager Tycoon - Indonesia Map</title>
+    <title>Shipping Manager Tycoon - Real Map</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #0f172a;
+            background-color: #0b132b;
             color: #f8fafc;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         header {
-            background-color: #1e293b;
+            background-color: #1c2541;
             padding: 15px 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #334155;
+            border-bottom: 2px solid #3a506b;
         }
         .logo {
             font-size: 18px;
             font-weight: bold;
-            color: #38bdf8;
+            color: #6fffe9;
         }
         .stats {
             display: flex;
             gap: 15px;
         }
         .stat-box {
-            background-color: #0f172a;
+            background-color: #0b132b;
             padding: 6px 12px;
             border-radius: 6px;
-            border: 1px solid #334155;
+            border: 1px solid #3a506b;
             font-size: 13px;
         }
         .stat-value {
@@ -45,80 +45,78 @@
             margin: 20px auto;
             padding: 0 15px;
         }
-        /* Style Peta Interaktif Indonesia */
+        /* Peta Real Indonesia */
         .map-card {
-            background-color: #1e293b;
+            background-color: #1c2541;
             border-radius: 12px;
             padding: 15px;
             margin-bottom: 20px;
-            border: 1px solid #334155;
+            border: 1px solid #3a506b;
         }
         .map-container {
             position: relative;
             width: 100%;
-            height: 380px;
-            background: linear-gradient(135deg, #0284c7 0%, #0f172a 100%);
+            height: 420px;
+            /* Menggunakan latar belakang peta geografis bernuansa maritim */
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Indonesia_on_the_globe_%28Southeast_Asia_centered%29.svg/1024px-Indonesia_on_the_globe_%28Southeast_Asia_centered%29.svg.png') no-repeat center center;
+            background-size: cover;
             border-radius: 8px;
             overflow: hidden;
-            border: 1px solid #334155;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            border: 1px solid #3a506b;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
         }
-        .map-bg-text {
-            color: rgba(255, 255, 255, 0.15);
-            font-size: 32px;
-            font-weight: bold;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            position: absolute;
-        }
+        
         /* Titik Pelabuhan di Peta */
         .port-pin {
             position: absolute;
-            background: #f59e0b;
-            color: #0f172a;
-            padding: 4px 8px;
+            background: rgba(15, 23, 42, 0.85);
+            color: #6fffe9;
+            padding: 3px 8px;
             font-size: 11px;
             font-weight: bold;
             border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            border: 1px solid #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+            border: 1px solid #6fffe9;
             transform: translate(-50%, -50%);
+            white-space: nowrap;
         }
-        /* Posisi Koordinat Pelabuhan di Peta Indonesia */
-        #port-priok { top: 70%; left: 32%; }
-        #port-surabaya { top: 75%; left: 45%; }
-        #port-batam { top: 40%; left: 22%; }
-        #port-medan { top: 25%; left: 12%; }
-        #port-makassar { top: 65%; left: 68%; }
+        /* Koordinat Pelabuhan */
+        #port-medan { top: 35%; left: 18%; }
+        #port-batam { top: 45%; left: 28%; }
+        #port-priok { top: 72%; left: 38%; }
+        #port-surabaya { top: 75%; left: 52%; }
+        #port-makassar { top: 65%; left: 72%; }
 
-        /* Kapal Bergerak di Peta */
+        /* Gambar Kapal Asli (Ikon Kapal Vektor PNG) */
         .ship-marker {
             position: absolute;
-            font-size: 18px;
-            transition: all 1s linear;
+            width: 36px;
+            height: 36px;
+            background: url('https://cdn-icons-png.flaticon.com/512/2954/2954884.png') no-repeat center center;
+            background-size: contain;
+            transition: all 1.2s ease-in-out;
             transform: translate(-50%, -50%);
             z-index: 10;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
         }
 
         .card {
-            background-color: #1e293b;
+            background-color: #1c2541;
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 20px;
-            border: 1px solid #334155;
+            border: 1px solid #3a506b;
         }
         .card h2 {
             margin-top: 0;
             font-size: 16px;
-            color: #38bdf8;
-            border-bottom: 1px solid #334155;
+            color: #6fffe9;
+            border-bottom: 1px solid #3a506b;
             padding-bottom: 10px;
         }
         .btn {
-            background-color: #38bdf8;
-            color: #0f172a;
+            background-color: #5bc0be;
+            color: #0b132b;
             border: none;
             padding: 8px 16px;
             font-weight: bold;
@@ -126,31 +124,30 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .btn:hover { background-color: #0ea5e9; }
-        .btn-green { background-color: #22c55e; color: #fff; }
-        .btn-green:hover { background-color: #16a34a; }
+        .btn:hover { background-color: #438a88; }
+        .btn-green { background-color: #2ec4b6; color: #fff; }
+        .btn-green:hover { background-color: #259f93; }
         
         .fleet-list { list-style: none; padding: 0; margin: 0; }
         .fleet-item {
-            background-color: #0f172a;
+            background-color: #0b132b;
             padding: 12px;
             margin-bottom: 10px;
             border-radius: 8px;
-            border: 1px solid #334155;
+            border: 1px solid #3a506b;
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
         .fleet-info { display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
         .route-control { display: flex; gap: 10px; align-items: center; }
-        select { background: #1e293b; color: #fff; border: 1px solid #334155; padding: 5px 8px; border-radius: 4px; font-size: 13px; }
+        select { background: #1c2541; color: #fff; border: 1px solid #3a506b; padding: 5px 8px; border-radius: 4px; font-size: 13px; }
     </style>
 </head>
 <body>
 
-    <!-- Header / Informasi Kas -->
     <header>
-        <div class="logo">⚓ Maritime Tycoon - Indonesia Map</div>
+        <div class="logo">⚓ Shipping Manager Tycoon - Pro Edition</div>
         <div class="stats">
             <div class="stat-box">💰 Kas: <span id="money" class="stat-value">$50,000</span></div>
             <div class="stat-box">🚢 Armada: <span id="fleet-count" class="stat-value">1</span> Kapal</div>
@@ -159,12 +156,10 @@
 
     <div class="container">
         
-        <!-- Peta Visual Wilayah Indonesia -->
+        <!-- Peta Geografis Indonesia -->
         <div class="map-card">
-            <h2>Peta Navigasi & Operasional Pelayaran Nusantara</h2>
+            <h2>Peta Navigasi & Posisi Armada Nusantara</h2>
             <div class="map-container" id="map-area">
-                <div class="map-bg-text">PETA NUSANTARA INDONESIA</div>
-                
                 <!-- Titik Pelabuhan -->
                 <div class="port-pin" id="port-medan">⚓ Medan</div>
                 <div class="port-pin" id="port-batam">⚓ Batam</div>
@@ -172,15 +167,15 @@
                 <div class="port-pin" id="port-surabaya">⚓ Surabaya</div>
                 <div class="port-pin" id="port-makassar">⚓ Makassar</div>
 
-                <!-- Ikon Kapal di Peta (Akan berpindah saat berlayar) -->
-                <div class="ship-marker" id="map-ship-0" style="top: 70%; left: 32%;">🚢</div>
+                <!-- Gambar Kapal Asli di Peta -->
+                <div class="ship-marker" id="map-ship-0" style="top: 72%; left: 38%;"></div>
             </div>
         </div>
 
-        <!-- Pusat Aksi & Beli Kapal -->
+        <!-- Pusat Manajemen -->
         <div class="card">
-            <h2>Pusat Manajemen</h2>
-            <p style="font-size: 13px; color: #94a3b8; margin-bottom: 12px;">Kelola armada kapal, pilih rute pelabuhan strategis, dan kembangkan bisnis logistik maritim Anda.</p>
+            <h2>Pusat Operasional</h2>
+            <p style="font-size: 13px; color: #94a3b8; margin-bottom: 12px;">Kendalikan armada kapal Anda melintasi rute logistik strategis di perairan Indonesia.</p>
             <button class="btn" onclick="beliKapal()">Beli Tugboat Baru ($15,000)</button>
         </div>
 
@@ -191,7 +186,7 @@
                 <li class="fleet-item" id="ship-box-0">
                     <div class="fleet-info">
                         <span>🚢 <b>TS Abadi</b> (Tugboat)</span>
-                        <span id="status-0" style="color: #38bdf8;">Status: Bersandar di Jakarta</span>
+                        <span id="status-0" style="color: #6fffe9;">Status: Bersandar di Jakarta</span>
                     </div>
                     <div class="route-control">
                         <select id="destination-0">
@@ -212,13 +207,12 @@
         let uang = 50000;
         let jumlahKapal = 1;
 
-        // Koordinat posisi pelabuhan di peta (persentase CSS)
         const portCoords = {
-            "Jakarta": { top: "70%", left: "32%" },
-            "Surabaya": { top: "75%", left: "45%" },
-            "Batam": { top: "40%", left: "22%" },
-            "Medan": { top: "25%", left: "12%" },
-            "Makassar": { top: "65%", left: "68%" }
+            "Jakarta": { top: "72%", left: "38%" },
+            "Surabaya": { top: "75%", left: "52%" },
+            "Batam": { top: "45%", left: "28%" },
+            "Medan": { top: "35%", left: "18%" },
+            "Makassar": { top: "65%", left: "72%" }
         };
 
         const ruteInfo = {
@@ -237,7 +231,6 @@
                 document.getElementById('money').innerText = '$' + uang.toLocaleString();
                 document.getElementById('fleet-count').innerText = jumlahKapal;
 
-                // Tambah elemen kapal di daftar
                 const daftarKapal = document.getElementById('fleet');
                 const li = document.createElement('li');
                 li.className = 'fleet-item';
@@ -245,7 +238,7 @@
                 li.innerHTML = `
                     <div class="fleet-info">
                         <span>🚢 <b>Kapal Logistik #${jumlahKapal}</b></span>
-                        <span id="status-${idBaru}" style="color: #38bdf8;">Status: Bersandar di Jakarta</span>
+                        <span id="status-${idBaru}" style="color: #6fffe9;">Status: Bersandar di Jakarta</span>
                     </div>
                     <div class="route-control">
                         <select id="destination-${idBaru}">
@@ -259,14 +252,12 @@
                 `;
                 daftarKapal.appendChild(li);
 
-                // Tambah ikon kapal di peta
                 const mapArea = document.getElementById('map-area');
                 const shipIcon = document.createElement('div');
                 shipIcon.className = 'ship-marker';
                 shipIcon.id = `map-ship-${idBaru}`;
                 shipIcon.style.top = portCoords["Jakarta"].top;
                 shipIcon.style.left = portCoords["Jakarta"].left;
-                shipIcon.innerHTML = '🚢';
                 mapArea.appendChild(shipIcon);
 
                 alert('Berhasil membeli armada baru!');
@@ -287,7 +278,6 @@
             tombol.style.opacity = '0.5';
             selectElement.disabled = true;
 
-            // Pindahkan kapal di peta ke pelabuhan tujuan secara visual
             if (portCoords[tujuan]) {
                 mapShip.style.top = portCoords[tujuan].top;
                 mapShip.style.left = portCoords[tujuan].left;
@@ -311,7 +301,7 @@
                     statusSpan.innerText = `Tiba di ${tujuan}! (+$$$ profit)`;
 
                     setTimeout(() => {
-                        statusSpan.style.color = '#38bdf8';
+                        statusSpan.style.color = '#6fffe9';
                         statusSpan.innerText = `Status: Bersandar di ${tujuan}`;
                         tombol.disabled = false;
                         tombol.style.opacity = '1';
