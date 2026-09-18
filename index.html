@@ -11,7 +11,7 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            background-color: #0f172a; /* Tema gelap elegan ala enterprise */
+            background-color: #0f172a;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         iframe {
@@ -49,7 +49,6 @@
             letter-spacing: 0.8px;
             margin-bottom: 25px;
         }
-        /* Spinner Modern */
         .spinner-container {
             position: relative;
             width: 60px;
@@ -67,7 +66,6 @@
             border-radius: 50%;
             animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
         }
-        /* Progress Bar Modern */
         .progress-track {
             width: 220px;
             height: 4px;
@@ -91,7 +89,7 @@
             50% { width: 75%; }
             100% { width: 100%; }
         }
-        /* Sembunyikan konten utama saat awal */
+        /* Konten utama */
         #app-content {
             width: 100%;
             height: 100%;
@@ -121,21 +119,30 @@
     </div>
 
     <script>
-        // Timer 7 detik dengan transisi pudar yang halus
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                const preloader = document.getElementById('preloader');
-                const appContent = document.getElementById('app-content');
-                
-                preloader.style.opacity = '0';
-                
+        // Cek apakah pengguna sudah pernah membuka halaman ini dalam sesi browser yang sama
+        if (sessionStorage.getItem('sudah_muat')) {
+            // Jika sudah pernah, langsung sembunyikan preloader dan tampilkan isi web tanpa jeda
+            document.getElementById('preloader').style.display = 'none';
+            document.getElementById('app-content').style.display = 'block';
+        } else {
+            // Jika baru pertama kali buka, jalankan animasi 7 detik lalu simpan statusnya
+            window.addEventListener('load', function() {
                 setTimeout(function() {
-                    preloader.style.display = 'none';
-                    appContent.style.display = 'block';
-                }, 600);
-                
-            }, 2000);
-        });
+                    const preloader = document.getElementById('preloader');
+                    const appContent = document.getElementById('app-content');
+                    
+                    preloader.style.opacity = '0';
+                    
+                    setTimeout(function() {
+                        preloader.style.display = 'none';
+                        appContent.style.display = 'block';
+                        // Tandai bahwa sesi ini sudah pernah dimuat
+                        sessionStorage.setItem('sudah_muat', 'true');
+                    }, 600);
+                    
+                }, 7000);
+            });
+        }
     </script>
 
 </body>
