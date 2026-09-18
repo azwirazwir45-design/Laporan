@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shipping Manager Tycoon - Indonesia Edition</title>
+    <title>Shipping Manager Tycoon - Indonesia Map</title>
     <style>
         body {
             margin: 0;
@@ -14,37 +14,94 @@
         }
         header {
             background-color: #1e293b;
-            padding: 20px;
+            padding: 15px 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #334155;
         }
         .logo {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: #38bdf8;
         }
         .stats {
             display: flex;
-            gap: 20px;
+            gap: 15px;
         }
         .stat-box {
             background-color: #0f172a;
-            padding: 8px 15px;
-            border-radius: 8px;
+            padding: 6px 12px;
+            border-radius: 6px;
             border: 1px solid #334155;
-            font-size: 14px;
+            font-size: 13px;
         }
         .stat-value {
             color: #4ade80;
             font-weight: bold;
         }
         .container {
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 0 20px;
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 15px;
         }
+        /* Style Peta Interaktif Indonesia */
+        .map-card {
+            background-color: #1e293b;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #334155;
+        }
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 380px;
+            background: linear-gradient(135deg, #0284c7 0%, #0f172a 100%);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #334155;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .map-bg-text {
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            position: absolute;
+        }
+        /* Titik Pelabuhan di Peta */
+        .port-pin {
+            position: absolute;
+            background: #f59e0b;
+            color: #0f172a;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            border: 1px solid #fff;
+            transform: translate(-50%, -50%);
+        }
+        /* Posisi Koordinat Pelabuhan di Peta Indonesia */
+        #port-priok { top: 70%; left: 32%; }
+        #port-surabaya { top: 75%; left: 45%; }
+        #port-batam { top: 40%; left: 22%; }
+        #port-medan { top: 25%; left: 12%; }
+        #port-makassar { top: 65%; left: 68%; }
+
+        /* Kapal Bergerak di Peta */
+        .ship-marker {
+            position: absolute;
+            font-size: 18px;
+            transition: all 1s linear;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
         .card {
             background-color: #1e293b;
             border-radius: 12px;
@@ -54,7 +111,7 @@
         }
         .card h2 {
             margin-top: 0;
-            font-size: 18px;
+            font-size: 16px;
             color: #38bdf8;
             border-bottom: 1px solid #334155;
             padding-bottom: 10px;
@@ -63,76 +120,67 @@
             background-color: #38bdf8;
             color: #0f172a;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 16px;
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
             transition: 0.2s;
         }
-        .btn:hover {
-            background-color: #0ea5e9;
-        }
-        .btn-green {
-            background-color: #22c55e;
-            color: #ffffff;
-        }
-        .btn-green:hover {
-            background-color: #16a34a;
-        }
-        .fleet-list {
-            list-style: none;
-            padding: 0;
-        }
+        .btn:hover { background-color: #0ea5e9; }
+        .btn-green { background-color: #22c55e; color: #fff; }
+        .btn-green:hover { background-color: #16a34a; }
+        
+        .fleet-list { list-style: none; padding: 0; margin: 0; }
         .fleet-item {
             background-color: #0f172a;
-            padding: 15px;
-            margin-bottom: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
             border-radius: 8px;
             border: 1px solid #334155;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
-        .fleet-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .route-control {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            background: #1e293b;
-            padding: 8px;
-            border-radius: 6px;
-        }
-        select {
-            background: #0f172a;
-            color: #fff;
-            border: 1px solid #334155;
-            padding: 6px 10px;
-            border-radius: 4px;
-        }
+        .fleet-info { display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+        .route-control { display: flex; gap: 10px; align-items: center; }
+        select { background: #1e293b; color: #fff; border: 1px solid #334155; padding: 5px 8px; border-radius: 4px; font-size: 13px; }
     </style>
 </head>
 <body>
 
-    <!-- Header / Panel Informasi Utama -->
+    <!-- Header / Informasi Kas -->
     <header>
-        <div class="logo">⚓ Maritime Tycoon Indonesia</div>
+        <div class="logo">⚓ Maritime Tycoon - Indonesia Map</div>
         <div class="stats">
             <div class="stat-box">💰 Kas: <span id="money" class="stat-value">$50,000</span></div>
             <div class="stat-box">🚢 Armada: <span id="fleet-count" class="stat-value">1</span> Kapal</div>
         </div>
     </header>
 
-    <!-- Konten Utama Game -->
     <div class="container">
         
-        <!-- Panel Kontrol / Aksi -->
+        <!-- Peta Visual Wilayah Indonesia -->
+        <div class="map-card">
+            <h2>Peta Navigasi & Operasional Pelayaran Nusantara</h2>
+            <div class="map-container" id="map-area">
+                <div class="map-bg-text">PETA NUSANTARA INDONESIA</div>
+                
+                <!-- Titik Pelabuhan -->
+                <div class="port-pin" id="port-medan">⚓ Medan</div>
+                <div class="port-pin" id="port-batam">⚓ Batam</div>
+                <div class="port-pin" id="port-priok">⚓ Jakarta</div>
+                <div class="port-pin" id="port-surabaya">⚓ Surabaya</div>
+                <div class="port-pin" id="port-makassar">⚓ Makassar</div>
+
+                <!-- Ikon Kapal di Peta (Akan berpindah saat berlayar) -->
+                <div class="ship-marker" id="map-ship-0" style="top: 70%; left: 32%;">🚢</div>
+            </div>
+        </div>
+
+        <!-- Pusat Aksi & Beli Kapal -->
         <div class="card">
-            <h2>Pusat Operasional Pelayaran</h2>
-            <p>Selamat datang, Captain! Pilih rute pelayaran antar pulau di Indonesia untuk kapal Anda dan raih profit kargo.</p>
+            <h2>Pusat Manajemen</h2>
+            <p style="font-size: 13px; color: #94a3b8; margin-bottom: 12px;">Kelola armada kapal, pilih rute pelabuhan strategis, dan kembangkan bisnis logistik maritim Anda.</p>
             <button class="btn" onclick="beliKapal()">Beli Tugboat Baru ($15,000)</button>
         </div>
 
@@ -140,19 +188,17 @@
         <div class="card">
             <h2>Daftar Armada & Rute Pelabuhan</h2>
             <ul class="fleet-list" id="fleet">
-                <li class="fleet-item" id="ship-0">
+                <li class="fleet-item" id="ship-box-0">
                     <div class="fleet-info">
                         <span>🚢 <b>TS Abadi</b> (Tugboat)</span>
-                        <span id="status-0" style="color: #38bdf8;">Status: Bersandar (Ready)</span>
+                        <span id="status-0" style="color: #38bdf8;">Status: Bersandar di Jakarta</span>
                     </div>
                     <div class="route-control">
-                        <label style="font-size: 13px;">Pilih Tujuan:</label>
                         <select id="destination-0">
-                            <option value="Tanjung Priok (Jakarta)">Tanjung Priok (Jakarta) - Potensi: $5,000</option>
-                            <option value="Tanjung Perak (Surabaya)">Tanjung Perak (Surabaya) - Potensi: $4,500</option>
-                            <option value="Batu Ampar (Batam)">Batu Ampar (Batam) - Potensi: $4,000</option>
-                            <option value="Belawan (Medan)">Belawan (Medan) - Potensi: $6,000</option>
-                            <option value="Makassar">Makassar - Potensi: $7,000</option>
+                            <option value="Surabaya">Tujuan: Surabaya (Reward: $4,500)</option>
+                            <option value="Batam">Tujuan: Batam (Reward: $4,000)</option>
+                            <option value="Medan">Tujuan: Medan (Reward: $6,000)</option>
+                            <option value="Makassar">Tujuan: Makassar (Reward: $7,000)</option>
                         </select>
                         <button class="btn btn-green" onclick="mulaiBerlayar(0)">Mulai Berlayar ➔</button>
                     </div>
@@ -166,12 +212,19 @@
         let uang = 50000;
         let jumlahKapal = 1;
 
-        // Data Pelabuhan & Durasi (dalam detik untuk simulasi game)
+        // Koordinat posisi pelabuhan di peta (persentase CSS)
+        const portCoords = {
+            "Jakarta": { top: "70%", left: "32%" },
+            "Surabaya": { top: "75%", left: "45%" },
+            "Batam": { top: "40%", left: "22%" },
+            "Medan": { top: "25%", left: "12%" },
+            "Makassar": { top: "65%", left: "68%" }
+        };
+
         const ruteInfo = {
-            "Tanjung Priok (Jakarta)": { reward: 5000, waktu: 10 },
-            "Tanjung Perak (Surabaya)": { reward: 4500, waktu: 8 },
-            "Batu Ampar (Batam)": { reward: 4000, waktu: 7 },
-            "Belawan (Medan)": { reward: 6000, waktu: 12 },
+            "Surabaya": { reward: 4500, waktu: 8 },
+            "Batam": { reward: 4000, waktu: 7 },
+            "Medan": { reward: 6000, waktu: 12 },
             "Makassar": { reward: 7000, waktu: 15 }
         };
 
@@ -184,28 +237,38 @@
                 document.getElementById('money').innerText = '$' + uang.toLocaleString();
                 document.getElementById('fleet-count').innerText = jumlahKapal;
 
+                // Tambah elemen kapal di daftar
                 const daftarKapal = document.getElementById('fleet');
                 const li = document.createElement('li');
                 li.className = 'fleet-item';
-                li.id = `ship-${idBaru}`;
+                li.id = `ship-box-${idBaru}`;
                 li.innerHTML = `
                     <div class="fleet-info">
-                        <span>🚢 <b>Kapal Logistik #${jumlahKapal}</b> (Tugboat)</span>
-                        <span id="status-${idBaru}" style="color: #38bdf8;">Status: Bersandar (Ready)</span>
+                        <span>🚢 <b>Kapal Logistik #${jumlahKapal}</b></span>
+                        <span id="status-${idBaru}" style="color: #38bdf8;">Status: Bersandar di Jakarta</span>
                     </div>
                     <div class="route-control">
-                        <label style="font-size: 13px;">Pilih Tujuan:</label>
                         <select id="destination-${idBaru}">
-                            <option value="Tanjung Priok (Jakarta)">Tanjung Priok (Jakarta) - Potensi: $5,000</option>
-                            <option value="Tanjung Perak (Surabaya)">Tanjung Perak (Surabaya) - Potensi: $4,500</option>
-                            <option value="Batu Ampar (Batam)">Batu Ampar (Batam) - Potensi: $4,000</option>
-                            <option value="Belawan (Medan)">Belawan (Medan) - Potensi: $6,000</option>
-                            <option value="Makassar">Makassar - Potensi: $7,000</option>
+                            <option value="Surabaya">Tujuan: Surabaya (Reward: $4,500)</option>
+                            <option value="Batam">Tujuan: Batam (Reward: $4,000)</option>
+                            <option value="Medan">Tujuan: Medan (Reward: $6,000)</option>
+                            <option value="Makassar">Tujuan: Makassar (Reward: $7,000)</option>
                         </select>
                         <button class="btn btn-green" onclick="mulaiBerlayar(${idBaru})">Mulai Berlayar ➔</button>
                     </div>
                 `;
                 daftarKapal.appendChild(li);
+
+                // Tambah ikon kapal di peta
+                const mapArea = document.getElementById('map-area');
+                const shipIcon = document.createElement('div');
+                shipIcon.className = 'ship-marker';
+                shipIcon.id = `map-ship-${idBaru}`;
+                shipIcon.style.top = portCoords["Jakarta"].top;
+                shipIcon.style.left = portCoords["Jakarta"].left;
+                shipIcon.innerHTML = '🚢';
+                mapArea.appendChild(shipIcon);
+
                 alert('Berhasil membeli armada baru!');
             } else {
                 alert('Kas perusahaan tidak cukup, Captain!');
@@ -216,16 +279,22 @@
             const selectElement = document.getElementById(`destination-${id}`);
             const tujuan = selectElement.value;
             const statusSpan = document.getElementById(`status-${id}`);
-            const cardItem = document.getElementById(`ship-${id}`);
+            const cardItem = document.getElementById(`ship-box-${id}`);
             const tombol = cardItem.querySelector('button');
+            const mapShip = document.getElementById(`map-ship-${id}`);
 
-            // Nonaktifkan tombol saat kapal sedang berlayar
             tombol.disabled = true;
             tombol.style.opacity = '0.5';
             selectElement.disabled = true;
 
+            // Pindahkan kapal di peta ke pelabuhan tujuan secara visual
+            if (portCoords[tujuan]) {
+                mapShip.style.top = portCoords[tujuan].top;
+                mapShip.style.left = portCoords[tujuan].left;
+            }
+
             let sisaWaktu = ruteInfo[tujuan].waktu;
-            statusSpan.style.color = '#facc15'; // Kuning (proses)
+            statusSpan.style.color = '#facc15';
             statusSpan.innerText = `Menuju ${tujuan} (${sisaWaktu}s)`;
 
             let timer = setInterval(() => {
@@ -238,13 +307,12 @@
                     uang += profit;
                     document.getElementById('money').innerText = '$' + uang.toLocaleString();
                     
-                    statusSpan.style.color = '#4ade80'; // Hijau (selesai)
-                    statusSpan.innerText = `Selesai! (+$$$ profit)`;
+                    statusSpan.style.color = '#4ade80';
+                    statusSpan.innerText = `Tiba di ${tujuan}! (+$$$ profit)`;
 
-                    // Reset setelah beberapa detik agar bisa jalan lagi
                     setTimeout(() => {
                         statusSpan.style.color = '#38bdf8';
-                        statusSpan.innerText = 'Status: Bersandar (Ready)';
+                        statusSpan.innerText = `Status: Bersandar di ${tujuan}`;
                         tombol.disabled = false;
                         tombol.style.opacity = '1';
                         selectElement.disabled = false;
