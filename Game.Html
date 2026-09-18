@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shipping Manager Tycoon</title>
+    <title>Shipping Manager Tycoon - Indonesia Edition</title>
     <style>
         body {
             margin: 0;
@@ -72,19 +72,46 @@
         .btn:hover {
             background-color: #0ea5e9;
         }
+        .btn-green {
+            background-color: #22c55e;
+            color: #ffffff;
+        }
+        .btn-green:hover {
+            background-color: #16a34a;
+        }
         .fleet-list {
             list-style: none;
             padding: 0;
         }
         .fleet-item {
             background-color: #0f172a;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .fleet-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+        .route-control {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: #1e293b;
+            padding: 8px;
+            border-radius: 6px;
+        }
+        select {
+            background: #0f172a;
+            color: #fff;
             border: 1px solid #334155;
+            padding: 6px 10px;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -92,7 +119,7 @@
 
     <!-- Header / Panel Informasi Utama -->
     <header>
-        <div class="logo">⚓ Maritime Tycoon</div>
+        <div class="logo">⚓ Maritime Tycoon Indonesia</div>
         <div class="stats">
             <div class="stat-box">💰 Kas: <span id="money" class="stat-value">$50,000</span></div>
             <div class="stat-box">🚢 Armada: <span id="fleet-count" class="stat-value">1</span> Kapal</div>
@@ -104,18 +131,31 @@
         
         <!-- Panel Kontrol / Aksi -->
         <div class="card">
-            <h2>Pusat Operasional</h2>
-            <p>Selamat datang, Captain! Kelola armada kapalmu, kirim kargo antar pelabuhan, dan kembangkan perusahaan pelayaranmu.</p>
-            <button class="btn" onclick="beliKapal()">Beli Tugboat Baru ($10,000)</button>
+            <h2>Pusat Operasional Pelayaran</h2>
+            <p>Selamat datang, Captain! Pilih rute pelayaran antar pulau di Indonesia untuk kapal Anda dan raih profit kargo.</p>
+            <button class="btn" onclick="beliKapal()">Beli Tugboat Baru ($15,000)</button>
         </div>
 
-        <!-- Daftar Armada Kapal -->
+        <!-- Daftar Armada Kapal & Rute -->
         <div class="card">
-            <h2>Daftar Armada Kapal</h2>
+            <h2>Daftar Armada & Rute Pelabuhan</h2>
             <ul class="fleet-list" id="fleet">
-                <li class="fleet-item">
-                    <span>🚢 TS Abadi (Tugboat - Siap Berlayar)</span>
-                    <span style="color: #38bdf8;">Status: Bersandar</span>
+                <li class="fleet-item" id="ship-0">
+                    <div class="fleet-info">
+                        <span>🚢 <b>TS Abadi</b> (Tugboat)</span>
+                        <span id="status-0" style="color: #38bdf8;">Status: Bersandar (Ready)</span>
+                    </div>
+                    <div class="route-control">
+                        <label style="font-size: 13px;">Pilih Tujuan:</label>
+                        <select id="destination-0">
+                            <option value="Tanjung Priok (Jakarta)">Tanjung Priok (Jakarta) - Potensi: $5,000</option>
+                            <option value="Tanjung Perak (Surabaya)">Tanjung Perak (Surabaya) - Potensi: $4,500</option>
+                            <option value="Batu Ampar (Batam)">Batu Ampar (Batam) - Potensi: $4,000</option>
+                            <option value="Belawan (Medan)">Belawan (Medan) - Potensi: $6,000</option>
+                            <option value="Makassar">Makassar - Potensi: $7,000</option>
+                        </select>
+                        <button class="btn btn-green" onclick="mulaiBerlayar(0)">Mulai Berlayar ➔</button>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -123,30 +163,94 @@
     </div>
 
     <script>
-        // Logika sederhana game tycoon
         let uang = 50000;
         let jumlahKapal = 1;
 
+        // Data Pelabuhan & Durasi (dalam detik untuk simulasi game)
+        const ruteInfo = {
+            "Tanjung Priok (Jakarta)": { reward: 5000, waktu: 10 },
+            "Tanjung Perak (Surabaya)": { reward: 4500, waktu: 8 },
+            "Batu Ampar (Batam)": { reward: 4000, waktu: 7 },
+            "Belawan (Medan)": { reward: 6000, waktu: 12 },
+            "Makassar": { reward: 7000, waktu: 15 }
+        };
+
         function beliKapal() {
-            if (uang >= 10000) {
-                uang -= 10000;
+            if (uang >= 15000) {
+                uang -= 15000;
+                let idBaru = jumlahKapal;
                 jumlahKapal += 1;
                 
-                // Update tampilan uang dan kapal
                 document.getElementById('money').innerText = '$' + uang.toLocaleString();
                 document.getElementById('fleet-count').innerText = jumlahKapal;
 
-                // Tambah kapal baru ke daftar
                 const daftarKapal = document.getElementById('fleet');
                 const li = document.createElement('li');
                 li.className = 'fleet-item';
-                li.innerHTML = `<span>🚢 Kapal Logistik #${jumlahKapal} (Baru)</span><span style="color: #38bdf8;">Status: Bersandar</span>`;
+                li.id = `ship-${idBaru}`;
+                li.innerHTML = `
+                    <div class="fleet-info">
+                        <span>🚢 <b>Kapal Logistik #${jumlahKapal}</b> (Tugboat)</span>
+                        <span id="status-${idBaru}" style="color: #38bdf8;">Status: Bersandar (Ready)</span>
+                    </div>
+                    <div class="route-control">
+                        <label style="font-size: 13px;">Pilih Tujuan:</label>
+                        <select id="destination-${idBaru}">
+                            <option value="Tanjung Priok (Jakarta)">Tanjung Priok (Jakarta) - Potensi: $5,000</option>
+                            <option value="Tanjung Perak (Surabaya)">Tanjung Perak (Surabaya) - Potensi: $4,500</option>
+                            <option value="Batu Ampar (Batam)">Batu Ampar (Batam) - Potensi: $4,000</option>
+                            <option value="Belawan (Medan)">Belawan (Medan) - Potensi: $6,000</option>
+                            <option value="Makassar">Makassar - Potensi: $7,000</option>
+                        </select>
+                        <button class="btn btn-green" onclick="mulaiBerlayar(${idBaru})">Mulai Berlayar ➔</button>
+                    </div>
+                `;
                 daftarKapal.appendChild(li);
-
-                alert('Berhasil membeli kapal baru!');
+                alert('Berhasil membeli armada baru!');
             } else {
-                alert('Uang perusahaan tidak cukup, Captain!');
+                alert('Kas perusahaan tidak cukup, Captain!');
             }
+        }
+
+        function mulaiBerlayar(id) {
+            const selectElement = document.getElementById(`destination-${id}`);
+            const tujuan = selectElement.value;
+            const statusSpan = document.getElementById(`status-${id}`);
+            const cardItem = document.getElementById(`ship-${id}`);
+            const tombol = cardItem.querySelector('button');
+
+            // Nonaktifkan tombol saat kapal sedang berlayar
+            tombol.disabled = true;
+            tombol.style.opacity = '0.5';
+            selectElement.disabled = true;
+
+            let sisaWaktu = ruteInfo[tujuan].waktu;
+            statusSpan.style.color = '#facc15'; // Kuning (proses)
+            statusSpan.innerText = `Menuju ${tujuan} (${sisaWaktu}s)`;
+
+            let timer = setInterval(() => {
+                sisaWaktu--;
+                if (sisaWaktu > 0) {
+                    statusSpan.innerText = `Menuju ${tujuan} (${sisaWaktu}s)`;
+                } else {
+                    clearInterval(timer);
+                    let profit = ruteInfo[tujuan].reward;
+                    uang += profit;
+                    document.getElementById('money').innerText = '$' + uang.toLocaleString();
+                    
+                    statusSpan.style.color = '#4ade80'; // Hijau (selesai)
+                    statusSpan.innerText = `Selesai! (+$$$ profit)`;
+
+                    // Reset setelah beberapa detik agar bisa jalan lagi
+                    setTimeout(() => {
+                        statusSpan.style.color = '#38bdf8';
+                        statusSpan.innerText = 'Status: Bersandar (Ready)';
+                        tombol.disabled = false;
+                        tombol.style.opacity = '1';
+                        selectElement.disabled = false;
+                    }, 3000);
+                }
+            }, 1000);
         }
     </script>
 
