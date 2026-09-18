@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping Manager Tycoon</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        header {
+            background-color: #1e293b;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #334155;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #38bdf8;
+        }
+        .stats {
+            display: flex;
+            gap: 20px;
+        }
+        .stat-box {
+            background-color: #0f172a;
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            font-size: 14px;
+        }
+        .stat-value {
+            color: #4ade80;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #334155;
+        }
+        .card h2 {
+            margin-top: 0;
+            font-size: 18px;
+            color: #38bdf8;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 10px;
+        }
+        .btn {
+            background-color: #38bdf8;
+            color: #0f172a;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn:hover {
+            background-color: #0ea5e9;
+        }
+        .fleet-list {
+            list-style: none;
+            padding: 0;
+        }
+        .fleet-item {
+            background-color: #0f172a;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #334155;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Panel Informasi Utama -->
+    <header>
+        <div class="logo">⚓ Maritime Tycoon</div>
+        <div class="stats">
+            <div class="stat-box">💰 Kas: <span id="money" class="stat-value">$50,000</span></div>
+            <div class="stat-box">🚢 Armada: <span id="fleet-count" class="stat-value">1</span> Kapal</div>
+        </div>
+    </header>
+
+    <!-- Konten Utama Game -->
+    <div class="container">
+        
+        <!-- Panel Kontrol / Aksi -->
+        <div class="card">
+            <h2>Pusat Operasional</h2>
+            <p>Selamat datang, Captain! Kelola armada kapalmu, kirim kargo antar pelabuhan, dan kembangkan perusahaan pelayaranmu.</p>
+            <button class="btn" onclick="beliKapal()">Beli Tugboat Baru ($10,000)</button>
+        </div>
+
+        <!-- Daftar Armada Kapal -->
+        <div class="card">
+            <h2>Daftar Armada Kapal</h2>
+            <ul class="fleet-list" id="fleet">
+                <li class="fleet-item">
+                    <span>🚢 TS Abadi (Tugboat - Siap Berlayar)</span>
+                    <span style="color: #38bdf8;">Status: Bersandar</span>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <script>
+        // Logika sederhana game tycoon
+        let uang = 50000;
+        let jumlahKapal = 1;
+
+        function beliKapal() {
+            if (uang >= 10000) {
+                uang -= 10000;
+                jumlahKapal += 1;
+                
+                // Update tampilan uang dan kapal
+                document.getElementById('money').innerText = '$' + uang.toLocaleString();
+                document.getElementById('fleet-count').innerText = jumlahKapal;
+
+                // Tambah kapal baru ke daftar
+                const daftarKapal = document.getElementById('fleet');
+                const li = document.createElement('li');
+                li.className = 'fleet-item';
+                li.innerHTML = `<span>🚢 Kapal Logistik #${jumlahKapal} (Baru)</span><span style="color: #38bdf8;">Status: Bersandar</span>`;
+                daftarKapal.appendChild(li);
+
+                alert('Berhasil membeli kapal baru!');
+            } else {
+                alert('Uang perusahaan tidak cukup, Captain!');
+            }
+        }
+    </script>
+
+</body>
+</html>
