@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Laporan Kapal</title>
+    <title>Sistem Laporan Barang</title>
     <style>
         body {
             margin: 0;
@@ -101,8 +101,8 @@
 
     <!-- Preloader -->
     <div id="preloader">
-        <div class="brand-title" id="preloader-title">Sistem Laporan Kapal</div>
-        <div class="loading-text" id="preloader-text">Memuat Data Operasional... Please Wait</div>
+        <div class="brand-title" id="preloader-title">Sistem Laporan Barang</div>
+        <div class="loading-text" id="preloader-text">Please Wait</div>
         
         <div class="spinner-container" id="spinner-box">
             <div class="spinner"></div>
@@ -134,7 +134,7 @@
                     preloader.style.display = 'none';
                     appContent.style.display = 'block';
                 }, 400);
-            }, 800); // 0.8 detik untuk refresh
+            }, 100); // 0.8 detik untuk refresh
 
         } else {
             // Kunjungan pertama: Jalankan animasi lengkap 7 detik
@@ -151,7 +151,7 @@
                         sessionStorage.setItem('sudah_muat', 'true');
                     }, 600);
                     
-                }, 7000); // 7 detik untuk kunjungan pertama
+                }, 2000); // 2 detik untuk kunjungan pertama
             });
         }
     </script>
