@@ -19,7 +19,7 @@
             height: 100%;
             border: none;
         }
-        /* Style Preloader Mewah */
+        /* Style Preloader Utama */
         #preloader {
             position: fixed;
             top: 0;
@@ -32,7 +32,7 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.6s ease;
+            transition: opacity 0.5s ease;
         }
         .brand-title {
             color: #ffffff;
@@ -99,16 +99,16 @@
 </head>
 <body>
 
-    <!-- Preloader Profesional & Elegan -->
+    <!-- Preloader -->
     <div id="preloader">
-        <div class="brand-title">Sistem Laporan Kapal</div>
-        <div class="loading-text">Memuat Data Operasional... Please Wait</div>
+        <div class="brand-title" id="preloader-title">Sistem Laporan Kapal</div>
+        <div class="loading-text" id="preloader-text">Memuat Data Operasional... Please Wait</div>
         
-        <div class="spinner-container">
+        <div class="spinner-container" id="spinner-box">
             <div class="spinner"></div>
         </div>
 
-        <div class="progress-track">
+        <div class="progress-track" id="progress-box">
             <div class="progress-fill"></div>
         </div>
     </div>
@@ -119,13 +119,25 @@
     </div>
 
     <script>
-        // Cek apakah pengguna sudah pernah membuka halaman ini dalam sesi browser yang sama
         if (sessionStorage.getItem('sudah_muat')) {
-            // Jika sudah pernah, langsung sembunyikan preloader dan tampilkan isi web tanpa jeda
-            document.getElementById('preloader').style.display = 'none';
-            document.getElementById('app-content').style.display = 'block';
+            // Jika di-refresh: Tampilkan mode cepat "Please Wait" sebentar saja (0.8 detik)
+            document.getElementById('preloader-title').style.display = 'none';
+            document.getElementById('spinner-box').style.display = 'none';
+            document.getElementById('progress-box').style.display = 'none';
+            document.getElementById('preloader-text').innerText = 'Please Wait...';
+
+            setTimeout(function() {
+                const preloader = document.getElementById('preloader');
+                const appContent = document.getElementById('app-content');
+                preloader.style.opacity = '0';
+                setTimeout(function() {
+                    preloader.style.display = 'none';
+                    appContent.style.display = 'block';
+                }, 400);
+            }, 800); // 0.8 detik untuk refresh
+
         } else {
-            // Jika baru pertama kali buka, jalankan animasi 7 detik lalu simpan statusnya
+            // Kunjungan pertama: Jalankan animasi lengkap 7 detik
             window.addEventListener('load', function() {
                 setTimeout(function() {
                     const preloader = document.getElementById('preloader');
@@ -136,11 +148,10 @@
                     setTimeout(function() {
                         preloader.style.display = 'none';
                         appContent.style.display = 'block';
-                        // Tandai bahwa sesi ini sudah pernah dimuat
                         sessionStorage.setItem('sudah_muat', 'true');
                     }, 600);
                     
-                }, 7000);
+                }, 7000); // 7 detik untuk kunjungan pertama
             });
         }
     </script>
