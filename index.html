@@ -26,34 +26,36 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.6s ease;
         }
         .brand-title {
             color: #ffffff;
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            margin-bottom: 8px;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
             text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
         }
         .loading-text {
-            color: #94a3b8;
-            font-size: 14px;
-            font-weight: 400;
-            letter-spacing: 0.8px;
-            margin-bottom: 25px;
+            color: #38bdf8;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 1.2px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
         }
         .spinner-container {
             position: relative;
-            width: 60px;
-            height: 60px;
-            margin-bottom: 25px;
+            width: 70px;
+            height: 70px;
+            margin-bottom: 20px;
         }
         .spinner {
             position: absolute;
@@ -64,30 +66,37 @@
             border: 3px solid rgba(56, 189, 248, 0.1);
             border-top: 3px solid #38bdf8;
             border-radius: 50%;
-            animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+            animation: spin 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+        }
+        /* Angka Persentase di Tengah Spinner */
+        .percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
         }
         .progress-track {
-            width: 220px;
-            height: 4px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
+            width: 240px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
             overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
         }
         .progress-fill {
             width: 0%;
             height: 100%;
             background: linear-gradient(90deg, #38bdf8, #818cf8);
-            border-radius: 4px;
-            animation: progressAnimation 7s linear forwards;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-        @keyframes progressAnimation {
-            0% { width: 0%; }
-            50% { width: 75%; }
-            100% { width: 100%; }
         }
         /* Konten utama */
         #app-content {
@@ -102,14 +111,15 @@
     <!-- Preloader -->
     <div id="preloader">
         <div class="brand-title" id="preloader-title">Sistem Laporan Barang</div>
-        <div class="loading-text" id="preloader-text">Please Wait</div>
+        <div class="loading-text" id="preloader-text">Menghubungkan ke Server...</div>
         
         <div class="spinner-container" id="spinner-box">
             <div class="spinner"></div>
+            <div class="percentage" id="percent-val">0%</div>
         </div>
 
         <div class="progress-track" id="progress-box">
-            <div class="progress-fill"></div>
+            <div class="progress-fill" id="progress-bar"></div>
         </div>
     </div>
 
@@ -119,41 +129,56 @@
     </div>
 
     <script>
-        if (sessionStorage.getItem('sudah_muat')) {
-            // Jika di-refresh: Tampilkan mode cepat "Please Wait" sebentar saja (0.8 detik)
-            document.getElementById('preloader-title').style.display = 'none';
-            document.getElementById('spinner-box').style.display = 'none';
-            document.getElementById('progress-box').style.display = 'none';
-            document.getElementById('preloader-text').innerText = 'Please Wait...';
+        const progressBar = document.getElementById('progress-bar');
+        const percentVal = document.getElementById('percent-val');
+        const loadingText = document.getElementById('preloader-text');
+        
+        let currentPercent = 0;
+        let isRefreshed = sessionStorage.getItem('sudah_muat');
+
+        // Simulasi persentase loading yang halus
+        let loadInterval = setInterval(function() {
+            if (currentPercent < 95) {
+                // Tambah angka secara acak agar terasa natural
+                currentPercent += Math.floor(Math.random() * 8) + 3;
+                if (currentPercent > 95) currentPercent = 95;
+                
+                progressBar.style.width = currentPercent + '%';
+                percentVal.innerText = currentPercent + '%';
+
+                // Ubah teks status secara dinamis berdasarkan persentase
+                if (currentPercent > 30 && currentPercent < 60) {
+                    loadingText.innerText = 'Memuat Database Kapal...';
+                } else if (currentPercent >= 60) {
+                    loadingText.innerText = 'Menyiapkan Antrean Admin...';
+                }
+            }
+        }, 120);
+
+        window.addEventListener('load', function() {
+            // Selesaikan bar loading hingga 100%
+            clearInterval(loadInterval);
+            currentPercent = 100;
+            progressBar.style.width = '100%';
+            percentVal.innerText = '100%';
+            loadingText.innerText = 'Selesai!';
+
+            let delayTime = isRefreshed ? 600 : 1800; // Jika di-refresh lebih cepat
 
             setTimeout(function() {
                 const preloader = document.getElementById('preloader');
                 const appContent = document.getElementById('app-content');
+                
                 preloader.style.opacity = '0';
+                
                 setTimeout(function() {
                     preloader.style.display = 'none';
                     appContent.style.display = 'block';
-                }, 400);
-            }, 3000); // 0.8 detik untuk refresh
-
-        } else {
-            // Kunjungan pertama: Jalankan animasi lengkap 7 detik
-            window.addEventListener('load', function() {
-                setTimeout(function() {
-                    const preloader = document.getElementById('preloader');
-                    const appContent = document.getElementById('app-content');
-                    
-                    preloader.style.opacity = '0';
-                    
-                    setTimeout(function() {
-                        preloader.style.display = 'none';
-                        appContent.style.display = 'block';
-                        sessionStorage.setItem('sudah_muat', 'true');
-                    }, 600);
-                    
-                }, 2000); // 2 detik untuk kunjungan pertama
-            });
-        }
+                    sessionStorage.setItem('sudah_muat', 'true');
+                }, 500);
+                
+            }, delayTime); 
+        });
     </script>
 
 </body>
